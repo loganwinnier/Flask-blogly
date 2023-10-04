@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title } Edit user information {% endblock %}
+{% block title %} Edit user information {% endblock %}
 
 {% block content %}
 
-<h1>Edit User profile</h1>
+<h1>Edit User profile for {{ user.first_name, user.last_name }}</h1>
 
-<form action="/users/{{user.id}}">
-  <label for="first-name">First Name</label>
-  <input type="text" name="first-name">
-  <label for="last-name">Last Name</label>
-  <input type="text" name="last-name">
-  <label for="img_url">Image Url</label>
-  <input type="text" name="img_url" placeholder="optional">
+<form action="/users/{{user.id}}/edit" method="post">
+  <label for="first_name">First Name</label>
+  <input type="text" name="first_name">
+  <label for="last_name">Last Name</label>
+  <input type="text" name="last_name">
+  <label for="image_url">Image Url</label>
+  <input type="text" name="image_url" placeholder="optional">
   <button type="submit">Edit</button>
 </form>
 

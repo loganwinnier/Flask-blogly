@@ -41,10 +41,10 @@ def show_new_user_form():
 def create_new_user():
     ''' takes in new user form data and makes a new user '''
     data = request.form
-    breakpoint()
     new_user = User(first_name=data["first-name"],
                     last_name=data["last-name"],
                     image_url=data["img_url"])
+
     db.session.add(new_user)
     db.session.commit()
 
@@ -59,25 +59,40 @@ def show_user(user_id):
 
 
 @app.get('/users/<user_id>/edit')
-def edit_user():
+def edit_user(user_id):
     ''' edit information about a particular user '''
 
-    return render_template('edit_user.html')
+    user = User.query.get(user_id)
+
+    return render_template('edit_user.html', user=user)
 
 
 @app.post('/users/<user_id>/edit')
-def update_user():
+def update_user(user_id):
     ''' receive edit information about a particular user and update db '''
 
-    # update db
+    data = request.form
+    user = User.query.get(user_id)
 
-    return redirect('/users')
+    user.first_name = data['first_name'] or user.first_name
+    user.last_name = data['last_name'] or user.last_name
+    user.image_url = data['image_url'] or user.image_url
+
+    db.session.commit()
+
+    return redirect(f'/users/{user_id}')
 
 
 @app.post('/users/<user_id>/delete')
-def delete_user():
-    ''' deletes a particular user and updates db '''
+def delete_user(user_id):
+    ''' deletes a particular user from the database '''
 
-    # update db
+    user = User.query.get(user_id)
+    db.session.delete(user)
+
+    # why does this not work? v
+    # User.query.filter(int(user_id)).delete()
+
+    db.session.commit()
 
     return redirect('/users')
