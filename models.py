@@ -17,7 +17,7 @@ class User(db.Model):
     first_name, last_name, image_url
     """
 
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = db.Column(
         db.Integer,  # can you use serial to get auto increment

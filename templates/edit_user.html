@@ -6,7 +6,14 @@
 
 <h1>Edit User profile</h1>
 
-  edit form
-  button that submits the form and makes post request
+<form action="/users/{{user.id}}">
+  <label for="first-name">First Name</label>
+  <input type="text" name="first-name">
+  <label for="last-name">Last Name</label>
+  <input type="text" name="last-name">
+  <label for="img_url">Image Url</label>
+  <input type="text" name="img_url" placeholder="optional">
+  <button type="submit">Edit</button>
+</form>
 
 {% endblock %}

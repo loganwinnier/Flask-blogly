@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request
 from models import connect_db, User, db
 
 app = Flask(__name__)
@@ -40,15 +40,22 @@ def show_new_user_form():
 @app.post('/users/new')
 def create_new_user():
     ''' takes in new user form data and makes a new user '''
+    data = request.form
+    breakpoint()
+    new_user = User(first_name=data["first-name"],
+                    last_name=data["last-name"],
+                    image_url=data["img_url"])
+    db.session.add(new_user)
+    db.session.commit()
 
     return redirect('/users')
 
 
 @app.get('/users/<user_id>')
-def show_user():
+def show_user(user_id):
     ''' show a particular user '''
-
-    return render_template('profile.html')
+    user = User.query.get(user_id)
+    return render_template('profile.html', user=user)
 
 
 @app.get('/users/<user_id>/edit')
@@ -66,6 +73,7 @@ def update_user():
 
     return redirect('/users')
 
+
 @app.post('/users/<user_id>/delete')
 def delete_user():
     ''' deletes a particular user and updates db '''
@@ -73,4 +81,3 @@ def delete_user():
     # update db
 
     return redirect('/users')
-

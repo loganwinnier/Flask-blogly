@@ -7,11 +7,14 @@
 
 <h1>Users</h1>
 
-  {% for user in users %}
-    <ul>
-      <li> user </li>
-    </ul>
-  {% endfor %}
+{% for user in users %}
+<ul>
+  <li><a href="/users/{{user.id}}"> {{user.first_name}} </a></li>
+</ul>
+{% endfor %}
+<form action="/users/new" method="get"><button
+          type="submit">Add User</button>
+</form>
 
 
 
