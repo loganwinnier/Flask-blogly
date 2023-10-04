@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} Blogly Users {% endblock %}
+
+
+{% block content %}
+
+<h1>Users</h1>
+
+  {% for user in users %}
+    <ul>
+      <li> user </li>
+    </ul>
+  {% endfor %}
+
+
+
+{% endblock %}
