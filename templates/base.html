@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=, initial-scale=1.0">
   <title>{% block title %} {% endblock %}</title>
 </head>
+
 <body>
 
-{% for msg in get_flashed_messages() %}
-  {{ msg }}
-{% endfor %}
+  {% for msg in get_flashed_messages() %}
+  {{ msg }} <br>
+  {% endfor %}
 
-{% block content %}
+  {% block content %}
 
-{% endblock %}
+  {% endblock %}
 
 </body>
+
 </html>

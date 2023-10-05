@@ -62,7 +62,9 @@ def show_user(user_id):
     ''' show a particular user '''
 
     user = User.query.get_or_404(user_id)
-    return render_template('profile.html', user=user)
+    posts = Post.query.filter(User.id == user_id)
+
+    return render_template('profile.html', user=user, posts=posts)
 
 
 @app.get('/users/<user_id>/edit')
@@ -103,17 +105,19 @@ def delete_user(user_id):
     return redirect('/users')
 
 
+# User's Posts section
+
 @app.get('/posts/<post_id>')
 def show_post(post_id):
     ''' show a specific post '''
 
     post = Post.query.get_or_404(post_id)
+    author = post.user.first_name + ' ' + post.user.last_name
 
-    #author = # magic through relationship thing to get user name
-    author = 'bob'
+    return render_template(f'post.html', post=post, author=author)
 
-    return render_template(f'/posts/{post_id}', post=post, author=author)
 
+# New Posts
 
 @app.get('/users/<user_id>/posts/new')
 def show_new_post_form(user_id):
@@ -131,15 +135,52 @@ def create_new_post(user_id):
     data = request.form
 
     post = Post(
-        post_title=data["post_title"],
-        content=data["post_content"],
+        title=data["post_title"] or None,
+        content=data["post_content"] or 'No Post Content',
         user_id=user_id)
 
     db.session.add(post)
     db.session.commit()
+    flash('Created a new post')
 
     return redirect(f'/users/{user_id}')
 
 
-@app.post('/posts/<post_id>}/edit')
-def edit_post():
+# Edit Posts
+
+@app.get('/posts/<post_id>/edit')
+def show_edit_post_form(post_id):
+    ''' show the new post form '''
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template('edit_post.html', post=post)
+
+
+@app.post('/posts/<post_id>/edit')
+def edit_post(post_id):
+    ''' take user information from edit post form and add a post to the db '''
+    data = request.form
+    post = Post.query.get_or_404(post_id)
+
+    post.title = data['post_title']
+    post.content = data['post_content']
+    db.session.commit()
+    flash(f'{post.title} Edited')
+
+    return redirect(f'/posts/{post_id}')
+
+# Delete Post
+
+
+@app.post('/posts/<post_id>/delete')
+def delete_post(post_id):
+    '''delete a post from the db '''
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user.id
+
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post Deleted')
+
+    return redirect(f'/users/{user_id}')

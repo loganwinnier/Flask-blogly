@@ -9,14 +9,15 @@
 
 <!-- Got New Post Form - used in testing-->
 <form action="/posts/{{post.id}}/edit" method="post">
+
   <label for="post_title">Title</label>
   <input name="post_title" value="{{ post.title }}">
 
   <label for="post_content">Content</label>
-  <textarea name="post_content" value="{{ post.content }}">
+  <textarea name="post_content">{{ post.content }}</textarea>
 
-  <button type="submit">Add</button>
-  <a href="/users/{{user.id}}">Cancel</a>
+  <button type="submit">Edit</button>
+  <a href="/users/{{post.user.id}}">Cancel</a>
   <!-- # make this look like a button later -->
 </form>
 

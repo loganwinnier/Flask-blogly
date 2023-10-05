@@ -9,10 +9,10 @@
 <!-- Got New Post Form - used in testing-->
 <form action="/users/{{user.id}}/posts/new" method="post">
   <label for="post_title">Title</label>
-  <input name="post_title">
+  <input required name="post_title">
 
   <label for="post_content">Content</label>
-  <textarea name="post_content">
+  <textarea required name="post_content"></textarea>
 
   <button type="submit">Add</button>
   <a href="/users/{{user.id}}">Cancel</a>

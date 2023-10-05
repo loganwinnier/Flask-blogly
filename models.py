@@ -43,7 +43,6 @@ class User(db.Model):
     )
 
 
-
 class Post(db.Model):
     ''' Post table model '''
 
@@ -57,7 +56,7 @@ class Post(db.Model):
     title = db.Column(
         db.String(50),
         nullable=False,
-        unique=(id),
+        # Unique=(id),
     )
 
     content = db.Column(
@@ -75,6 +74,6 @@ class Post(db.Model):
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
-
     )
 
+    user = db.relationship('User', backref="posts")
