@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %} Edit user information {% endblock %}
+{% block title %} Edit user information for {{ user.first_name}} {{user.last_name}} {% endblock %}
 
 {% block content %}
 
 <h1>Edit User profile for {{ user.first_name}} {{user.last_name}}</h1>
-<!-- input value={{variable}}-->
+
 <form action="/users/{{user.id}}/edit" method="post">
   <label for="first_name">First Name</label>
   <input name="first_name" value="{{user.first_name}}">
+
   <label for="last_name">Last Name</label>
-  <input name="last_name">
+  <input name="last_name" value="{{user.last_name}}">
+
   <label for="image_url">Image Url</label>
-  <input name="image_url" placeholder="optional">
-  <!--TODO: add cancel button can be link-->
+  <input name="image_url"  value="{{user.image_url}}">
+
   <button type="submit">Edit</button>
+  <a href="/users/{{user.id}}"> cancel </a>
 </form>
 
 {% endblock %}

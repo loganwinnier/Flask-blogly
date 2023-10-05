@@ -24,7 +24,7 @@ class User(db.Model):
     id = db.Column(
         db.Integer,
         primary_key=True,
-        autoincrement=True)  # dont need
+    )
 
     first_name = db.Column(
         db.String(25),
@@ -41,3 +41,40 @@ class User(db.Model):
         nullable=False,
         default=DEFAULT_IMAGE_URL,
     )
+
+
+
+class Post(db.Model):
+    ''' Post table model '''
+
+    __tablename__ = "posts"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    title = db.Column(
+        db.String(50),
+        nullable=False,
+        unique=(id),
+    )
+
+    content = db.Column(
+        db.String,
+        nullable=False,
+        default='',
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now(),
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+
+    )
+

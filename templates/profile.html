@@ -1,24 +1,31 @@
 {% extends 'base.html' %}
-<!--TODO: Better Title-->
-{% block title %} Profile {% endblock %}
+
+{% block title %} Profile page for {{ user.first_name }} {{ user.last_name }} {% endblock %}
 
 
 {% block content %}
 
-<img src="{{user.image_url}}" alt="profile image">
-<!--TODO: More specific alt-->
+<img src="{{user.image_url}}" alt="profile image for {{ user.first_name }} {{ user.last_name }} ">
+
 <h1>{{user.first_name}} {{user.last_name}}</h1>
 
-<form
-      action="/users/{{user.id}}/edit"
-      method="get">
-  <button type="submit">Edit</button>
+<form>
+  <button type="submit" formaction="/users/{{user.id}}/edit"  formmethod="get" >Edit</button>
+  <button type="submit" formaction="/users/{{user.id}}/delete" formmethod="post">Delete</button>
 </form>
 
-<form
-      action="/users/{{user.id}}/delete"
-      method="post">
-  <button type="submit">Delete</button>
+<h1> Posts </h1>
+
+{% for post in posts %}
+  <ul>
+    <li>
+      <a href="/posts/{{post.id}}"> {{ post.title }}</a>
+    </li>
+  </ul>
+{% endfor %}
+
+<form>
+  <button type="submit" formaction="/users/{{user.id}}/posts/new"  formmethod="get">Add Post</button>
 </form>
-<!--TODO: Combine forms with form method and form actions-->
+
 {% endblock %}

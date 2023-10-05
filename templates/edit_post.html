@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %} Editing post {% endblock %}
+<!-- make better title -->
+
+{% block content %}
+
+<h1>Edit Post </h1>
+
+<!-- Got New Post Form - used in testing-->
+<form action="/posts/{{post.id}}/edit" method="post">
+  <label for="post_title">Title</label>
+  <input name="post_title" value="{{ post.title }}">
+
+  <label for="post_content">Content</label>
+  <textarea name="post_content" value="{{ post.content }}">
+
+  <button type="submit">Add</button>
+  <a href="/users/{{user.id}}">Cancel</a>
+  <!-- # make this look like a button later -->
+</form>
+
+
+{% endblock %}

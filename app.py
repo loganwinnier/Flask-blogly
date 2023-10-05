@@ -2,14 +2,16 @@
 
 import os
 
-from flask import Flask, redirect, render_template, request
-from models import connect_db, User, db, DEFAULT_IMAGE_URL
+from flask import Flask, redirect, render_template, request, flash, session
+from models import connect_db, User, Post, db, DEFAULT_IMAGE_URL
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     "DATABASE_URL", 'postgresql:///blogly')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
+
+app.config['SECRET_KEY'] = 'shhh'
 
 connect_db(app)
 
@@ -25,7 +27,7 @@ def root():
 def show_users():
     ''' display a list of Blogly users '''
 
-    users = User.query.all()  # Orderby sort
+    users = User.query.order_by(User.first_name)
 
     return render_template('users.html', users=users)
 
@@ -50,7 +52,8 @@ def create_new_user():
 
     db.session.add(new_user)
     db.session.commit()
-    # TODO: flash a message
+
+    flash(f'New user {new_user.first_name} {new_user.last_name} created')
     return redirect('/users')
 
 
@@ -58,7 +61,7 @@ def create_new_user():
 def show_user(user_id):
     ''' show a particular user '''
 
-    user = User.query.get(user_id)  # FIXME:update to get or 404
+    user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
 
@@ -66,7 +69,7 @@ def show_user(user_id):
 def edit_user(user_id):
     ''' edit information about a particular user '''
 
-    user = User.query.get(user_id)  # FIXME:update to get or 404
+    user = User.query.get_or_404(user_id)
 
     return render_template('edit_user.html', user=user)
 
@@ -76,27 +79,67 @@ def update_user(user_id):
     ''' receive edit information about a particular user and update db '''
 
     data = request.form
-    user = User.query.get(user_id)  # FIXME:update to get or 404
+    user = User.query.get_or_404(user_id)
 
     user.first_name = data['first_name'] or user.first_name
     user.last_name = data['last_name'] or user.last_name
-    user.image_url = data['image_url'] or user.image_url  # TODO:default image
+    user.image_url = data['image_url'] or DEFAULT_IMAGE_URL
 
     db.session.commit()
-    # TODO: add a flash
-    return redirect(f'/users/{user_id}')  # FIXME: redirect to users
+
+    flash(f'Succesfully updated user {user.first_name} {user.last_name}')
+    return redirect(f'/users')
 
 
 @app.post('/users/<user_id>/delete')
 def delete_user(user_id):
     ''' deletes a particular user from the database '''
 
-    user = User.query.get(user_id)  # FIXME:update to get or 404
+    user = User.query.get_or_404(user_id)
     db.session.delete(user)
-    # TODO: add a user deleted flash
-    # why does this not work? v
-    # User.query.filter(int(user_id)).delete()
-
     db.session.commit()
 
+    flash(f'User {user.first_name} {user.last_name} successfully deleted')
     return redirect('/users')
+
+
+@app.get('/posts/<post_id>')
+def show_post(post_id):
+    ''' show a specific post '''
+
+    post = Post.query.get_or_404(post_id)
+
+    #author = # magic through relationship thing to get user name
+    author = 'bob'
+
+    return render_template(f'/posts/{post_id}', post=post, author=author)
+
+
+@app.get('/users/<user_id>/posts/new')
+def show_new_post_form(user_id):
+    ''' show the new post form '''
+
+    user = User.query.get_or_404(user_id)
+
+    return render_template('new_post.html', user=user)
+
+
+@app.post('/users/<user_id>/posts/new')
+def create_new_post(user_id):
+    ''' take user information from new post form and add a post to the db '''
+
+    data = request.form
+
+    post = Post(
+        post_title=data["post_title"],
+        content=data["post_content"],
+        user_id=user_id)
+
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f'/users/{user_id}')
+
+
+@app.post('/posts/<post_id>}/edit')
+def edit_post():

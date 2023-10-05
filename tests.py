@@ -99,10 +99,13 @@ class UserViewTestCase(TestCase):
         """Test delete user button post request"""
 
         with app.test_client() as c:
-            resp = c.post(f"/users/{self.user_id}/delete",  # TODO: reformat
-                          follow_redirects=True)
+            resp = c.post(
+                f"/users/{self.user_id}/delete",
+                follow_redirects=True,
+            )
 
             html = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Got users page', html)
-            # TODO: assertnotin
+            self.assertNotIn("test1_first</a>", html)
+
