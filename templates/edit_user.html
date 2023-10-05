@@ -4,15 +4,16 @@
 
 {% block content %}
 
-<h1>Edit User profile for {{ user.first_name, user.last_name }}</h1>
-
+<h1>Edit User profile for {{ user.first_name}} {{user.last_name}}</h1>
+<!-- input value={{variable}}-->
 <form action="/users/{{user.id}}/edit" method="post">
   <label for="first_name">First Name</label>
-  <input type="text" name="first_name">
+  <input name="first_name" value="{{user.first_name}}">
   <label for="last_name">Last Name</label>
-  <input type="text" name="last_name">
+  <input name="last_name">
   <label for="image_url">Image Url</label>
-  <input type="text" name="image_url" placeholder="optional">
+  <input name="image_url" placeholder="optional">
+  <!--TODO: add cancel button can be link-->
   <button type="submit">Edit</button>
 </form>
 

@@ -1,18 +1,24 @@
 {% extends 'base.html' %}
-
+<!--TODO: Better Title-->
 {% block title %} Profile {% endblock %}
 
 
 {% block content %}
 
-<img src="{{user.image_url}}" alt="no image">
+<img src="{{user.image_url}}" alt="profile image">
+<!--TODO: More specific alt-->
 <h1>{{user.first_name}} {{user.last_name}}</h1>
 
-<form action="/users/{{user.id}}/edit" method="get"><button
-          type="submit">Edit</button>
-</form>
-<form action="/users/{{user.id}}/delete" method="post"><button
-          type="submit">Delete</button>
+<form
+      action="/users/{{user.id}}/edit"
+      method="get">
+  <button type="submit">Edit</button>
 </form>
 
+<form
+      action="/users/{{user.id}}/delete"
+      method="post">
+  <button type="submit">Delete</button>
+</form>
+<!--TODO: Combine forms with form method and form actions-->
 {% endblock %}

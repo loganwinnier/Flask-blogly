@@ -1,6 +1,9 @@
 """Models for Blogly."""
 
 from flask_sqlalchemy import SQLAlchemy
+
+DEFAULT_IMAGE_URL = "https://miro.medium.com/v2/resize:fit:479/0*5bRx6RbvKwCG5ig5.jpg"
+
 db = SQLAlchemy()
 
 
@@ -13,16 +16,15 @@ def connect_db(app):
 
 
 class User(db.Model):
-    """User table model for database contains id,
-    first_name, last_name, image_url
+    """User table model
     """
 
     __tablename__ = "users"
 
     id = db.Column(
-        db.Integer,  # can you use serial to get auto increment
+        db.Integer,
         primary_key=True,
-        autoincrement=True)
+        autoincrement=True)  # dont need
 
     first_name = db.Column(
         db.String(25),
@@ -37,5 +39,5 @@ class User(db.Model):
     image_url = db.Column(
         db.String,
         nullable=False,
-        default="https://miro.medium.com/v2/resize:fit:479/0*5bRx6RbvKwCG5ig5.jpg"
+        default=DEFAULT_IMAGE_URL,
     )

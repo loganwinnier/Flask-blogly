@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
 
 {% block title %} Blogly Users {% endblock %}
-
-
 {% block content %}
 
+<!-- Got users page - used in testing-->
 <h1>Users</h1>
 
 {% for user in users %}
 <ul>
-  <li><a href="/users/{{user.id}}"> {{user.first_name}} </a></li>
+  <li>
+    <a href="/users/{{user.id}}"> {{user.first_name}} {{user.last_name}}</a>
+  </li>
 </ul>
 {% endfor %}
-<form action="/users/new" method="get"><button
-          type="submit">Add User</button>
+<form
+      action="/users/new"
+      method="get">
+  <button type="submit">Add User</button> <!-- TODO: make into link-->
 </form>
 
 
