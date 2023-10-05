@@ -5,9 +5,11 @@ endblock %}
 
 
 {% block content %}
+<!-- got profile page - used for testing  -->
 <a href="/users">Home</a><br>
 <img src="{{user.image_url}}"
-     alt="profile image for {{ user.first_name }} {{ user.last_name }} ">
+     alt="profile image for {{ user.first_name }} {{ user.last_name }} "
+     style="width: 200px;">
 
 <h1>{{user.first_name}} {{user.last_name}}</h1>
 

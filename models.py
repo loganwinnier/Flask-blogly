@@ -42,6 +42,9 @@ class User(db.Model):
         default=DEFAULT_IMAGE_URL,
     )
 
+    # instance property
+    # posts = db.relationship('Post', backref='user')
+
 
 class Post(db.Model):
     ''' Post table model '''
@@ -74,6 +77,9 @@ class Post(db.Model):
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
+        #TODO: add nullable=False (and drop tables)
     )
 
+    # for every Post instance, I want to get the User by saying that Post instance.user
     user = db.relationship('User', backref="posts")
+    # backref: for every single User instance

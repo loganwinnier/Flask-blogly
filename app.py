@@ -62,9 +62,8 @@ def show_user(user_id):
     ''' show a particular user '''
 
     user = User.query.get_or_404(user_id)
-    posts = Post.query.filter(User.id == user_id)
 
-    return render_template('profile.html', user=user, posts=posts)
+    return render_template('profile.html', user=user, posts=user.posts) #TODO: jinja already has user.posts access
 
 
 @app.get('/users/<user_id>/edit')
@@ -96,7 +95,7 @@ def update_user(user_id):
 @app.post('/users/<user_id>/delete')
 def delete_user(user_id):
     ''' deletes a particular user from the database '''
-
+    #TODO:after changing fk to not nullable, delete all user's posts before deleting user
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
@@ -112,9 +111,9 @@ def show_post(post_id):
     ''' show a specific post '''
 
     post = Post.query.get_or_404(post_id)
-    author = post.user.first_name + ' ' + post.user.last_name
+    author = post.user.first_name + ' ' + post.user.last_name #TODO: do in jinja
 
-    return render_template(f'post.html', post=post, author=author)
+    return render_template(f'post.html', post=post, author=author) #TODO: #use backref to get author
 
 
 # New Posts
@@ -130,7 +129,7 @@ def show_new_post_form(user_id):
 
 @app.post('/users/<user_id>/posts/new')
 def create_new_post(user_id):
-    ''' take user information from new post form and add a post to the db '''
+    ''' take information from new post form and add a post to the db '''
 
     data = request.form
 
@@ -141,6 +140,7 @@ def create_new_post(user_id):
 
     db.session.add(post)
     db.session.commit()
+
     flash('Created a new post')
 
     return redirect(f'/users/{user_id}')
@@ -160,27 +160,31 @@ def show_edit_post_form(post_id):
 @app.post('/posts/<post_id>/edit')
 def edit_post(post_id):
     ''' take user information from edit post form and add a post to the db '''
+
     data = request.form
     post = Post.query.get_or_404(post_id)
 
     post.title = data['post_title']
     post.content = data['post_content']
     db.session.commit()
+
     flash(f'{post.title} Edited')
 
     return redirect(f'/posts/{post_id}')
 
-# Delete Post
 
+# Delete Post
 
 @app.post('/posts/<post_id>/delete')
 def delete_post(post_id):
     '''delete a post from the db '''
+
     post = Post.query.get_or_404(post_id)
     user_id = post.user.id
 
     db.session.delete(post)
     db.session.commit()
+
     flash('Post Deleted')
 
     return redirect(f'/users/{user_id}')
