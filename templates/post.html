@@ -8,7 +8,16 @@
 <!-- this is the post view -->
 
 <h1>{{post.title}}</h1>
-<h2>by {{ author }}</h2>
+
+{% for tag in tags %}
+<ul>
+  <li>
+    <a href="/tags/{{tag.id}}"> {{tag.name}}</a>
+  </li>
+</ul>
+{% endfor %}
+
+<h2>by {{post.user.first_name}} {{post.user.last_name}}</h2>
 <p>{{post.content}}</p>
 
 <a href="/users/{{post.user.id}}">Back</a>

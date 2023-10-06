@@ -3,7 +3,7 @@
 import os
 
 from flask import Flask, redirect, render_template, request, flash, session
-from models import connect_db, User, Post, db, DEFAULT_IMAGE_URL
+from models import connect_db, User, Post, db, DEFAULT_IMAGE_URL, Tag, PostTag
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
@@ -63,7 +63,7 @@ def show_user(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    return render_template('profile.html', user=user, posts=user.posts) #TODO: jinja already has user.posts access
+    return render_template('profile.html', user=user)
 
 
 @app.get('/users/<user_id>/edit')
@@ -95,8 +95,8 @@ def update_user(user_id):
 @app.post('/users/<user_id>/delete')
 def delete_user(user_id):
     ''' deletes a particular user from the database '''
-    #TODO:after changing fk to not nullable, delete all user's posts before deleting user
     user = User.query.get_or_404(user_id)
+    Post.query.filter(user.id == user_id).delete()
     db.session.delete(user)
     db.session.commit()
 
@@ -111,9 +111,8 @@ def show_post(post_id):
     ''' show a specific post '''
 
     post = Post.query.get_or_404(post_id)
-    author = post.user.first_name + ' ' + post.user.last_name #TODO: do in jinja
 
-    return render_template(f'post.html', post=post, author=author) #TODO: #use backref to get author
+    return render_template(f'post.html', post=post)
 
 
 # New Posts

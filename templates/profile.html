@@ -22,7 +22,7 @@ endblock %}
 
 <h1> Posts </h1>
 
-{% for post in posts %}
+{% for post in user.posts %}
 <ul>
   <li>
     <a href="/posts/{{post.id}}"> {{ post.title }}</a>

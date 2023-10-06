@@ -77,9 +77,45 @@ class Post(db.Model):
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
-        #TODO: add nullable=False (and drop tables)
+        nullable=False
     )
 
     # for every Post instance, I want to get the User by saying that Post instance.user
     user = db.relationship('User', backref="posts")
     # backref: for every single User instance
+
+class Tag(db.Model):
+    ''' Tag model '''
+
+    __tablename__ = "tags"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    name = db.Column(
+        db.String(25),
+        nullable=False,
+        unique=True
+    )
+
+    posts = db.relationship('Post', secondary='posts_tags', backref='tags')
+
+
+class PostTag(db.Model):
+    ''' PostTag model '''
+
+    __tablename__ = "posts_tags"
+
+    tag_id = db.Column(
+        db.Integer,
+        db.ForeignKey('tags.id'),
+        primary_key=True,
+    )
+
+    post_id = db.Column(
+        db.Integer,
+        db.ForeignKey('posts.id'),
+        primary_key=True,
+    )

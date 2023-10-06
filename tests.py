@@ -96,7 +96,6 @@ class UserViewTestCase(TestCase):
             self.assertIn('Got users page', html)
             self.assertIn('test1_first', html)
 
-
     def test_delete_user(self):
         """Test delete user button post request"""
 
@@ -110,7 +109,6 @@ class UserViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Got users page', html)
             self.assertNotIn("test1_first</a>", html)
-
 
 
 class PostViewTestCase(TestCase):
@@ -140,18 +138,23 @@ class PostViewTestCase(TestCase):
             user_id=test_user.id
         )
 
+        test_post2 = Post(
+            title="Do not Delete this Test Post!",
+            content="this is test_post2 content",
+            user_id=test_user.id
+        )
+
         db.session.add(test_post)
+        db.session.add(test_post2)
         db.session.commit()
 
         self.test_post_id = test_post.id
         self.test_user_id = test_post.user_id
 
-
     def tearDown(self):
         """Clean up any fouled transaction."""
 
         db.session.rollback()
-
 
     def test_posts_list(self):
         """ test that list of posts shows up on user page  """
@@ -164,7 +167,6 @@ class PostViewTestCase(TestCase):
 
             self.assertIn("Test title", html)
 
-
     def test_show_new_post_form(self):
         """Test for get request for new post form"""
 
@@ -174,7 +176,6 @@ class PostViewTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Got New Post Form', html)
-
 
     def test_create_new_post(self):
         """Test creating new post from form post request"""
@@ -194,7 +195,6 @@ class PostViewTestCase(TestCase):
             self.assertIn('got profile page', html)
             self.assertIn('Test title', html)
 
-
     def test_edit_post(self):
         """ Test editing a post """
 
@@ -204,7 +204,7 @@ class PostViewTestCase(TestCase):
                 data={
                     'post_title': 'Changed post title',
                     'post_content': 'this is updated test content',
-                    },
+                },
                 follow_redirects=True)
 
             html = resp.get_data(as_text=True)
@@ -213,7 +213,6 @@ class PostViewTestCase(TestCase):
             self.assertIn('post view', html)
             self.assertIn('Changed post title', html)
             self.assertNotIn('this is test content', html)
-
 
     def test_delete_post(self):
         """ Test delete post """
@@ -229,4 +228,4 @@ class PostViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('got profile page', html)
             self.assertNotIn("Test title", html)
-            #TODO: add a test post that should still be there, Actually make second test in setup
+            self.assertIn("Do not Delete this Test Post!", html)
