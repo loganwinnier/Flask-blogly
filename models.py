@@ -84,6 +84,7 @@ class Post(db.Model):
     user = db.relationship('User', backref="posts")
     # backref: for every single User instance
 
+
 class Tag(db.Model):
     ''' Tag model '''
 
@@ -99,8 +100,11 @@ class Tag(db.Model):
         nullable=False,
         unique=True
     )
-
+    # express route, can't get other columns from post_tags
     posts = db.relationship('Post', secondary='posts_tags', backref='tags')
+
+    # post_tags = db.relationship('PostTag', backref='tags')
+    # local route - only useful if more columns in posts_tags that you wanted info from
 
 
 class PostTag(db.Model):
